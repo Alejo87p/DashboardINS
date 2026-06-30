@@ -67,6 +67,28 @@
   .footer{text-align:center;padding:24px;font-size:.78rem;color:var(--text-light);border-top:1px solid var(--border);margin-top:20px;}
   .diff-badge{display:inline-block;background:#e8f5e9;color:#2e7d32;border-radius:4px;padding:2px 7px;font-size:.75rem;font-weight:600;margin-left:6px;}
   .diff-badge.up{background:#fce4ec;color:#c62828;}
+
+  /* ── Guía de Interpretación ───────────────────────── */
+  .guia-bloque{margin-bottom:24px;}
+  .guia-bloque-hdr{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--primary);color:#fff;border-radius:10px 10px 0 0;}
+  .guia-bloque-hdr .g-ico{font-size:1.3rem;}
+  .guia-bloque-hdr h3{font-size:.98rem;font-weight:700;}
+  .guia-bloque-hdr p{font-size:.78rem;opacity:.8;margin-top:2px;}
+  .guia-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;padding:16px;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;}
+  .guia-term{background:#f8fafc;border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:6px;padding:12px 14px;}
+  .guia-term.zombie{border-left-color:var(--zombie);}
+  .guia-term.warn{border-left-color:var(--warning);}
+  .guia-term.ok{border-left-color:var(--success);}
+  .guia-term.danger{border-left-color:var(--danger);}
+  .guia-term dt{font-size:.88rem;font-weight:700;color:var(--primary);margin-bottom:5px;}
+  .guia-term dd{font-size:.82rem;color:var(--text-light);line-height:1.55;margin:0;}
+  .guia-formula{display:inline-block;font-family:monospace;background:#e8f0fe;color:#1a3a6b;border-radius:3px;padding:2px 7px;font-size:.76rem;margin-top:5px;}
+  .guia-example{font-style:italic;margin-top:5px;font-size:.78rem;color:var(--text-light);}
+  .semaforo{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+  .sem-pill{padding:2px 9px;border-radius:10px;font-size:.72rem;font-weight:600;}
+  .sem-low{background:#d5f5e3;color:#1a7a45;}
+  .sem-med{background:#fdebd0;color:#a04000;}
+  .sem-high{background:#fdf2f2;color:#922b21;}
 </style>
 </head>
 <body>
@@ -87,6 +109,7 @@
   <button onclick="showSection('tipos',this)">🗂️ Por Tipo</button>
   <button onclick="showSection('migracion',this)">🚚 Migración</button>
   <button onclick="showSection('grooming',this)">💬 Grooming</button>
+  <button onclick="showSection('guia',this)">📖 Guía</button>
 </div>
 <div class="main">
 
@@ -209,7 +232,7 @@
         <table class="data-table" id="tbl-equipos">
           <thead><tr>
             <th onclick="sortTbl('tbl-equipos',0)">Equipo ↕</th>
-            <th onclick="sortTbl('tbl-equipos',1)">Estado</th>
+            <th onclick="sortTbl('tbl-equipos',1)">Estado ↕</th>
             <th onclick="sortTbl('tbl-equipos',2)">Total ↕</th>
             <th onclick="sortTbl('tbl-equipos',3)">Abiertos ↕</th>
             <th onclick="sortTbl('tbl-equipos',4)">Terminales ↕</th>
@@ -217,7 +240,7 @@
             <th onclick="sortTbl('tbl-equipos',6)">🧟 Zombies ↕</th>
             <th onclick="sortTbl('tbl-equipos',7)">% Zombie ↕</th>
             <th onclick="sortTbl('tbl-equipos',8)">Riesgo Mig.</th>
-            <th>Sucesor</th>
+            <th onclick="sortTbl('tbl-equipos',9)">Sucesor ↕</th>
           </tr></thead>
           <tbody id="tbody-equipos"></tbody>
         </table>
@@ -250,8 +273,16 @@
     <div class="card-header">🧟 Top 20 Ítems Zombie por Inactividad</div>
     <div class="card-body">
       <div class="tbl-wrap">
-        <table class="data-table">
-          <thead><tr><th>ID</th><th>Equipo</th><th>Tipo</th><th>Estado</th><th>Título</th><th>Inactividad (días)</th><th>Antigüedad (días)</th></tr></thead>
+        <table class="data-table" id="tbl-zombies">
+          <thead><tr>
+            <th onclick="sortTbl('tbl-zombies',0)">ID ↕</th>
+            <th onclick="sortTbl('tbl-zombies',1)">Equipo ↕</th>
+            <th onclick="sortTbl('tbl-zombies',2)">Tipo ↕</th>
+            <th onclick="sortTbl('tbl-zombies',3)">Estado ↕</th>
+            <th>Título</th>
+            <th onclick="sortTbl('tbl-zombies',5)">Inactividad (días) ↕</th>
+            <th onclick="sortTbl('tbl-zombies',6)">Antigüedad (días) ↕</th>
+          </tr></thead>
           <tbody id="tbody-zombies"></tbody>
         </table>
       </div>
@@ -265,8 +296,16 @@
     <div class="card-header">🗂️ Distribución por Tipo de Work Item</div>
     <div class="card-body">
       <div class="tbl-wrap">
-        <table class="data-table">
-          <thead><tr><th>Tipo</th><th>Abiertos</th><th>Terminales</th><th>Removidos</th><th>Total</th><th>🧟 Zombies</th><th>% Zombie / Abiertos</th></tr></thead>
+        <table class="data-table" id="tbl-tipos">
+          <thead><tr>
+            <th onclick="sortTbl('tbl-tipos',0)">Tipo ↕</th>
+            <th onclick="sortTbl('tbl-tipos',1)">Abiertos ↕</th>
+            <th onclick="sortTbl('tbl-tipos',2)">Terminales ↕</th>
+            <th onclick="sortTbl('tbl-tipos',3)">Removidos ↕</th>
+            <th onclick="sortTbl('tbl-tipos',4)">Total ↕</th>
+            <th onclick="sortTbl('tbl-tipos',5)">🧟 Zombies ↕</th>
+            <th onclick="sortTbl('tbl-tipos',6)">% Zombie / Abiertos ↕</th>
+          </tr></thead>
           <tbody id="tbody-tipos"></tbody>
         </table>
       </div>
@@ -285,8 +324,16 @@
     <div class="card-body">
       <p style="font-size:.88rem;color:var(--text-light);margin-bottom:16px;">Ítems abiertos en equipos "En Transición". Deben transferirse al sucesor o cerrarse formalmente.</p>
       <div class="tbl-wrap">
-        <table class="data-table">
-          <thead><tr><th>ID</th><th>Equipo Origen</th><th>Equipo Sucesor</th><th>Tipo</th><th>Estado</th><th>Inactividad (días)</th><th>Título</th></tr></thead>
+        <table class="data-table" id="tbl-mig">
+          <thead><tr>
+            <th onclick="sortTbl('tbl-mig',0)">ID ↕</th>
+            <th onclick="sortTbl('tbl-mig',1)">Equipo Origen ↕</th>
+            <th onclick="sortTbl('tbl-mig',2)">Equipo Sucesor ↕</th>
+            <th onclick="sortTbl('tbl-mig',3)">Tipo ↕</th>
+            <th onclick="sortTbl('tbl-mig',4)">Estado ↕</th>
+            <th onclick="sortTbl('tbl-mig',5)">Inactividad (días) ↕</th>
+            <th>Título</th>
+          </tr></thead>
           <tbody id="tbody-mig"></tbody>
         </table>
       </div>
@@ -295,8 +342,8 @@
   <div class="card">
     <div class="card-header">📋 Equipos en Transición — Resumen</div>
     <div class="card-body">
-      <table class="data-table">
-        <thead><tr><th>Equipo</th><th>Sucesor</th><th>Abiertos</th><th>Zombies</th><th>% Zombie</th><th>Riesgo Mig.</th></tr></thead>
+      <table class="data-table" id="tbl-mig-res">
+        <thead><tr><th onclick="sortTbl('tbl-mig-res',0)">Equipo ↕</th><th onclick="sortTbl('tbl-mig-res',1)">Sucesor ↕</th><th onclick="sortTbl('tbl-mig-res',2)">Abiertos ↕</th><th onclick="sortTbl('tbl-mig-res',3)">Zombies ↕</th><th onclick="sortTbl('tbl-mig-res',4)">% Zombie ↕</th><th onclick="sortTbl('tbl-mig-res',5)">Riesgo Mig. ↕</th></tr></thead>
         <tbody>
           <tr><td><strong>MAC</strong></td><td style="color:var(--trans)">MAC Servicio Digital</td><td class="num-danger">2</td><td class="num-zombie">2</td><td>100%</td><td class="num-danger">⚠️ 2</td></tr>
           <tr><td><strong>Fábrica de Productos</strong></td><td style="color:var(--trans)">Fábrica de Productos Digital</td><td class="num-danger">1</td><td class="num-zombie">1</td><td>100%</td><td class="num-danger">⚠️ 1</td></tr>
@@ -320,6 +367,127 @@
     </div>
   </div>
 </div>
+
+
+<!-- GUÍA DE INTERPRETACIÓN -->
+<div id="guia" class="section">
+
+  <div class="guia-bloque">
+    <div class="guia-bloque-hdr">
+      <span class="g-ico">📊</span>
+      <div><h3>Resumen Ejecutivo — Métricas Globales</h3><p>KPIs que aparecen en la vista principal del dashboard</p></div>
+    </div>
+    <div class="guia-grid">
+      <dl class="guia-term"><dt>Total Ítems</dt><dd>Cantidad total de work items exportados desde Azure DevOps, sin importar su estado. Incluye abiertos, terminados y removidos.</dd></dl>
+      <dl class="guia-term ok"><dt>Abiertos</dt><dd>Ítems cuyo estado <strong>no es terminal ni removido</strong>. Representan trabajo pendiente activo o paralizado.<div class="guia-example">Ejemplo de estados: Active, In Progress, En Progreso, To Do, New</div></dd></dl>
+      <dl class="guia-term ok"><dt>Terminados / Terminales</dt><dd>Ítems que alcanzaron un estado de finalización. No generan alertas de salud.<div class="guia-example">Ejemplo: Done, Closed, Terminado, Listo para producción, Resolved</div></dd></dl>
+      <dl class="guia-term"><dt>Removidos</dt><dd>Ítems marcados con estado <strong>"Removed"</strong>. Fueron descartados pero se conservan como historial en ADO.</dd></dl>
+      <dl class="guia-term zombie"><dt>🧟 Zombies</dt><dd>Ítems abiertos con <strong>≥ 30 días sin ningún cambio</strong> en Azure DevOps. Representan trabajo paralizado que consume espacio mental y distorsiona la capacidad del equipo.<div class="guia-formula">Es_Zombie = Abierto AND (Hoy − Changed Date) ≥ 30</div></dd></dl>
+      <dl class="guia-term zombie"><dt>% Zombie sobre Abiertos</dt><dd>Proporción de ítems zombie respecto al total de abiertos. Un porcentaje alto indica acumulación de deuda de backlog.<div class="guia-formula">% Zombie = Zombies / Abiertos × 100</div></dd></dl>
+      <dl class="guia-term danger"><dt>Días de Inactividad (promedio / máximo)</dt><dd>Tiempo desde el último cambio registrado en ADO (<em>Changed Date</em>) hasta la fecha de corte. Se calcula solo para zombies. Un promedio de 86 días significa que el zombie típico lleva ~3 meses sin tocarse.</dd></dl>
+      <dl class="guia-term"><dt>Días de Antigüedad (promedio)</dt><dd>Tiempo desde que se creó el ítem (<em>Created Date</em>) hasta la fecha de corte. Antigüedad alta + inactividad alta = ítem olvidado.</dd></dl>
+      <dl class="guia-term warn"><dt>⚠️ Riesgo de Migración</dt><dd>Cantidad de ítems abiertos en equipos con estado "En Transición". No tienen dueño claro y deben transferirse al equipo sucesor o cerrarse.</dd></dl>
+      <dl class="guia-term"><dt>Fecha de Corte</dt><dd>Fecha en que se tomó la foto del backlog. Todas las métricas de tiempo se calculan contra esta fecha. Un análisis es válido por ~2 semanas.</dd></dl>
+    </div>
+  </div>
+
+  <div class="guia-bloque">
+    <div class="guia-bloque-hdr">
+      <span class="g-ico">👥</span>
+      <div><h3>Vista Por Equipo</h3><p>Columnas de la tabla de equipos y estados posibles</p></div>
+    </div>
+    <div class="guia-grid">
+      <dl class="guia-term ok"><dt>Estado: Activo</dt><dd>El equipo opera normalmente. Su backlog debe mantenerse limpio con ítems priorizados. Se monitorea zombie rate y antigüedad.</dd></dl>
+      <dl class="guia-term warn"><dt>Estado: En Transición</dt><dd>El equipo está <strong>migrando hacia el modelo de Servicio Digital</strong>. Sus ítems abiertos deben transferirse al equipo sucesor antes de que se cierre. Es el estado de mayor riesgo operativo.</dd></dl>
+      <dl class="guia-term"><dt>Estado: Cerrado</dt><dd>El equipo fue disuelto o absorbido. No debería tener ítems abiertos; si los tiene, deben reasignarse o cerrarse.</dd></dl>
+      <dl class="guia-term"><dt>Estado: Duplicado</dt><dd>El equipo existe en ADO como nombre alternativo o legado de otro equipo activo. Se consolida bajo el equipo sucesor.</dd></dl>
+      <dl class="guia-term zombie"><dt>% Zombie por Equipo</dt><dd>Porcentaje de ítems abiertos que son zombies. Semáforo de salud:<div class="semaforo"><span class="sem-pill sem-low">Bajo &lt;30%</span><span class="sem-pill sem-med">Moderado 30–60%</span><span class="sem-pill sem-high">Crítico &gt;60%</span></div></dd></dl>
+      <dl class="guia-term"><dt>Equipo Sucesor</dt><dd>Para equipos En Transición, Cerrado o Duplicado: el equipo destino al que deben migrarse los ítems abiertos. Si está vacío, el equipo es el destino final.</dd></dl>
+      <dl class="guia-term warn"><dt>Riesgo Migración</dt><dd>Número de ítems abiertos en equipos En Transición. No pertenecen formalmente a ningún equipo activo hasta que se transfieran.</dd></dl>
+    </div>
+  </div>
+
+  <div class="guia-bloque">
+    <div class="guia-bloque-hdr">
+      <span class="g-ico">🧟</span>
+      <div><h3>Vista Zombies</h3><p>Cómo se identifican y qué hacer con ellos</p></div>
+    </div>
+    <div class="guia-grid">
+      <dl class="guia-term zombie"><dt>¿Qué es un zombie?</dt><dd>Un ítem de trabajo abierto que <strong>no ha sido modificado en 30 o más días</strong>. Nadie está trabajando en él, pero tampoco fue cerrado ni descartado.</dd></dl>
+      <dl class="guia-term zombie"><dt>¿Por qué importa?</dt><dd>Los zombies distorsionan la capacidad percibida del equipo, generan ruido en planificación y son síntoma de que el backlog no se gestiona activamente.</dd></dl>
+      <dl class="guia-term"><dt>🏛️ Épicas Zombie</dt><dd>Iniciativas estratégicas abiertas sin actividad. Una Épica zombie bloquea la visibilidad del roadmap y puede representar inversión aprobada que no avanza.</dd></dl>
+      <dl class="guia-term"><dt>📌 Features Zombie</dt><dd>Grupos de funcionalidades sin actividad. Fragmentan el backlog y complican la priorización trimestral.</dd></dl>
+      <dl class="guia-term danger"><dt>Inactividad (días)</dt><dd>Días desde el último cambio hasta la fecha de corte. La tabla Top 20 ordena de mayor a menor para priorizar el saneamiento.</dd></dl>
+      <dl class="guia-term ok"><dt>¿Qué hacer con un zombie?</dt><dd>Solo existen 3 acciones válidas:<br><strong>① Reactivar</strong> — asignar al sprint.<br><strong>② Cerrar</strong> — ya no es relevante.<br><strong>③ Remover</strong> — descartarlo (queda como historial en ADO).</dd></dl>
+    </div>
+  </div>
+
+  <div class="guia-bloque">
+    <div class="guia-bloque-hdr">
+      <span class="g-ico">🗂️</span>
+      <div><h3>Vista Por Tipo de Work Item</h3><p>Jerarquía y tipos de ítems en Azure DevOps INS</p></div>
+    </div>
+    <div class="guia-grid">
+      <dl class="guia-term"><dt>Epic (Épica)</dt><dd>Iniciativa de gran alcance, normalmente multi-sprint. Contiene múltiples Features. Nivel más alto de la jerarquía en ADO.</dd></dl>
+      <dl class="guia-term"><dt>Feature</dt><dd>Capacidad de negocio entregable. Agrupa User Stories o PBIs relacionados. Nivel intermedio de la jerarquía.</dd></dl>
+      <dl class="guia-term"><dt>User Story / Product Backlog Item</dt><dd>Requerimiento funcional desde la perspectiva del usuario. Unidad de entrega en el sprint. Los equipos Scrum clásicos usan "User Story"; algunos modernos usan "PBI".</dd></dl>
+      <dl class="guia-term"><dt>Servicio Digital</dt><dd>Tipo de work item específico para equipos en el nuevo modelo de Servicio Digital en INS. Equivale a una User Story en el nuevo framework.</dd></dl>
+      <dl class="guia-term"><dt>PBI Técnico</dt><dd>Requerimiento técnico (deuda técnica, infraestructura, refactoring). No entrega valor de negocio directo pero es necesario para la calidad del producto.</dd></dl>
+      <dl class="guia-term"><dt>PBI Obligatorio</dt><dd>Requerimiento de cumplimiento normativo, legal o regulatorio. Alta prioridad no negociable.</dd></dl>
+    </div>
+  </div>
+
+  <div class="guia-bloque">
+    <div class="guia-bloque-hdr">
+      <span class="g-ico">🚚</span>
+      <div><h3>Vista Migración</h3><p>Transición de equipos Scrum al modelo de Servicio Digital</p></div>
+    </div>
+    <div class="guia-grid">
+      <dl class="guia-term warn"><dt>Equipo En Transición</dt><dd>Equipo que comenzó el proceso de convertirse en equipo de Servicio Digital. Tiene un equipo sucesor asignado. Sus ítems abiertos deben migrarse antes de que se cierre el equipo origen.</dd></dl>
+      <dl class="guia-term"><dt>Equipo Sucesor</dt><dd>El nuevo equipo de Servicio Digital que absorbe el trabajo del equipo en transición. Ej: MAC → MAC Servicio Digital.</dd></dl>
+      <dl class="guia-term danger"><dt>Ítem en Riesgo de Migración</dt><dd>Ítem abierto cuyo equipo está En Transición. Si no se migra o cierra, queda huérfano — sin equipo responsable claro.</dd></dl>
+      <dl class="guia-term"><dt>Categoría Base</dt><dd><strong>Comercial/Producto:</strong> líneas de negocio de seguros.<br><strong>Administrativo:</strong> procesos internos.<br><strong>Transversal/Servicios:</strong> capacidades compartidas.<br><strong>Cumplimiento Normativo:</strong> regulación.</dd></dl>
+    </div>
+  </div>
+
+  <div class="guia-bloque">
+    <div class="guia-bloque-hdr">
+      <span class="g-ico">💬</span>
+      <div><h3>Vista Grooming</h3><p>Preguntas generadas automáticamente para sesiones de refinamiento</p></div>
+    </div>
+    <div class="guia-grid">
+      <dl class="guia-term"><dt>¿Qué es el Grooming / Refinamiento?</dt><dd>Ceremonia ágil donde el equipo revisa, estima y prioriza los ítems del backlog <em>antes</em> del sprint planning. El objetivo es mantener siempre ítems listos para entrar al sprint.</dd></dl>
+      <dl class="guia-term zombie"><dt>Preguntas de Saneamiento</dt><dd>Generadas para ítems con alta inactividad. El equipo decide en la sesión si reactivar, cerrar o remover cada zombie.</dd></dl>
+      <dl class="guia-term"><dt>Preguntas de Priorización</dt><dd>Sobre Épicas y Features abiertas. Ayudan a establecer un techo de WIP (Work In Progress) en el backlog estratégico.</dd></dl>
+      <dl class="guia-term ok"><dt>¿Con qué frecuencia?</dt><dd>Zombie rate <strong>&gt;60%</strong> → grooming quincenal.<br>Zombie rate <strong>&lt;30%</strong> → grooming mensual.<br>Regenerar el análisis cada 2 semanas para datos actualizados.</dd></dl>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">🔖 Glosario Rápido — Estados en Azure DevOps</div>
+    <div class="card-body">
+      <div class="tbl-wrap">
+        <table class="data-table" id="tbl-glosario">
+          <thead><tr>
+            <th onclick="sortTbl('tbl-glosario',0)">Estado en ADO ↕</th>
+            <th onclick="sortTbl('tbl-glosario',1)">Categoría ↕</th>
+            <th>¿Cuenta como zombie?</th>
+            <th>Acción recomendada</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:.8rem">Active / In Progress</code></td><td>Abierto</td><td class="num-zombie">Sí, si ≥30 días sin cambio</td><td>Asignar o cerrar</td></tr>
+            <tr><td><code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:.8rem">New / To Do</code></td><td>Abierto</td><td class="num-zombie">Sí, si ≥30 días sin cambio</td><td>Priorizar o remover</td></tr>
+            <tr><td><code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:.8rem">Done / Closed</code></td><td>Terminal</td><td class="num-success">No</td><td>Ninguna</td></tr>
+            <tr><td><code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:.8rem">Resolved / Terminado</code></td><td>Terminal</td><td class="num-success">No</td><td>Verificar y cerrar</td></tr>
+            <tr><td><code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:.8rem">Removed</code></td><td>Removido</td><td class="num-success">No</td><td>Ninguna</td></tr>
+            <tr><td><code style="background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:.8rem">Listo para producción</code></td><td>Terminal</td><td class="num-success">No</td><td>Desplegar y cerrar</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /guia -->
 
 </div><!-- /main -->
 <div class="footer">Dashboard — Salud del Backlog Ágil | INS | Corte: 28 jun 2026 | Fuente: BacklogJun4_2026.xlsx (4,175 ítems) | Generado con Cowork + Claude</div>
